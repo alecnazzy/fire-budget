@@ -1,38 +1,190 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  width: 800px;
+  height: 600px;
+  background-color: rgb(45, 29, 96);
+  background-color: #5b0ae7;
   color: white;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  border-radius: 30px;
+  overflow: hidden;
 }
 
-.App-link {
-  color: #61dafb;
+/* YEARLY SALARY QUESTION CONTAINER*/
+#ysQuestion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+#title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+#question {
+  font-size: 25px;
+}
+#answer {
+  font-size: 20px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+#answer input {
+  margin-left: 10px;
+  width: 200px;
+  height: 30px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  padding-left: 10px;
+}
+button {
+  margin-left: 10px;
+  margin-top: 10px;
+  width: 100px;
+  height: 30px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: rgb(45, 29, 96);
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+}
+button:hover {
+  cursor: pointer;
+  color: #f97046;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* SALARY VALUES CONFIRM CONTAINER*/
+#salaryConfirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+#salaryValues {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  font-size: 15px;
+}
+
+/* BILLS QUESTION CONTAINER */
+#billsQuestion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+/* BILLS CONFIRM CONTAINER */
+#billsConfirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+/* TAX QUESTION CONTAINER */
+#taxQuestion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+#answer a {
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #df2da3;
+}
+
+/* TAX CONFIRM CONTAINER */
+#taxConfirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+/* ALL DONE CONTAINER */
+#allDone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+#allDone h1 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+/* MAIN APP */
+#mainApp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+#totalsInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  font-size: 15px;
+  background-color: white;
+  color: #5b0ae7;
+  width: 300px;
+  height: 100px;
+  border-radius: 10px;
+  font-size: 40px;
+}
+
+/* ALLOCATION COMPONENT */
+.allocation {
+  width: 300px;
+  height: 30px;
+  background-color: #350a7f;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+.allocationTitle {
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 15px;
+}
+.allocationPercentage {
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 15px;
+}
+.allocationAmount {
+  font-size: 15px;
+  font-weight: bold;
+  margin-right: 15px;
 }
