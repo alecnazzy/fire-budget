@@ -1,203 +1,166 @@
 import "./App.css";
 import React from "react";
+import Delete from "./components/deleteBtn";
 
 function App() {
   var yearlySalary = 0;
-  var monthlySalary = 0;
-  var biweeklySalary = 0;
-  var weeklySalary = 0;
-  var bills = 0;
-  var billsPercentage = 0;
   var taxRate = 0;
-  var leftoverTotal = 0;
+  var originalTotal = 0;
+  var total = 0;
 
-  function calculateSalaries() {
-    yearlySalary = document.getElementById("yearlySalary").value;
-    monthlySalary = yearlySalary / 12;
-    monthlySalary = monthlySalary.toFixed(2);
-    biweeklySalary = yearlySalary / 26;
-    biweeklySalary = biweeklySalary.toFixed(2);
-    weeklySalary = yearlySalary / 52;
-    weeklySalary = weeklySalary.toFixed(2);
-
-    document.getElementById("ysQuestion").style.display = "none";
-    document.getElementById("salaryConfirm").style.display = "block";
-    document.getElementById("yearlyValue").innerHTML =
-      "Yearly Salary: $" + yearlySalary;
-    document.getElementById("monthlyValue").innerHTML =
-      "Monthly Salary: $" + monthlySalary;
-    document.getElementById("biweeklyValue").innerHTML =
-      "Biweekly Salary: $" + biweeklySalary;
-    document.getElementById("weeklyValue").innerHTML =
-      "Weekly Salary: $" + weeklySalary;
+  function submitSalary() {
+    yearlySalary = document.getElementById("salaryInput").value;
+    document.getElementById("salary").style.display = "none";
+    document.getElementById("tax").style.display = "block";
   }
 
-  function submitSalaries() {
-    document.getElementById("salaryConfirm").style.display = "none";
-    document.getElementById("billsQuestion").style.display = "block";
-  }
-
-  function changeSalaries() {
-    yearlySalary = 0;
-    document.getElementById("salaryConfirm").style.display = "none";
-    document.getElementById("ysQuestion").style.display = "block";
-  }
-
-  function calculateBills() {
-    bills = document.getElementById("bills").value * 12;
-    document.getElementById("billsQuestion").style.display = "none";
-    billsPercentage = (bills / yearlySalary) * 100;
-    billsPercentage = billsPercentage.toFixed(1);
-    document.getElementById("billsTotal").innerHTML = "Total Bills: $" + bills;
-    document.getElementById("billsPercentage").innerHTML =
-      "Percentage of income: " + billsPercentage + "%";
-    document.getElementById("billsConfirm").style.display = "block";
-  }
-
-  function submitBills() {
-    document.getElementById("billsConfirm").style.display = "none";
-    document.getElementById("taxQuestion").style.display = "block";
-  }
-
-  function changeBills() {
-    bills = 0;
-    document.getElementById("billsConfirm").style.display = "none";
-    document.getElementById("billsQuestion").style.display = "block";
-  }
-
-  function calculateTax() {
-    taxRate = document.getElementById("tax").value;
-    document.getElementById("taxQuestion").style.display = "none";
-    document.getElementById("taxConfirm").style.display = "block";
-    document.getElementById("taxRate").innerHTML = "Tax Rate: " + taxRate + "%";
-  }
-
-  function submitTaxRate() {
-    document.getElementById("taxConfirm").style.display = "none";
-    leftoverTotal = yearlySalary - bills - (yearlySalary * taxRate) / 100;
-    leftoverTotal = leftoverTotal.toFixed(2);
+  function submitTax() {
+    taxRate = document.getElementById("taxInput").value;
+    total = yearlySalary - (yearlySalary * taxRate) / 100;
+    originalTotal = total;
     document.getElementById("leftoverTotal").innerHTML =
-      "Total leftover to allocate into savings: $" + leftoverTotal;
+      "Total to allocate into savings: $" + total.toFixed(2);
+    document.getElementById("tax").style.display = "none";
     document.getElementById("allDone").style.display = "block";
-  }
-
-  function changeTaxRate() {
-    taxRate = 0;
-    document.getElementById("taxConfirm").style.display = "none";
-    document.getElementById("taxQuestion").style.display = "block";
   }
 
   function nextBtn() {
     document.getElementById("allDone").style.display = "none";
-    document.getElementById("totalsInfo").innerHTML = leftoverTotal;
+    document.getElementById("originalTotal").innerHTML =
+      "Total $" + originalTotal;
+    document.getElementById("total").innerHTML = "Unallocated $" + total;
     document.getElementById("mainApp").style.display = "block";
   }
 
+  // updates the total in #screen
   function update(percent) {
-    leftoverTotal = leftoverTotal - (leftoverTotal * percent) / 100;
-    leftoverTotal = leftoverTotal.toFixed(2);
-
-    document.getElementById("totalsInfo").innerHTML = leftoverTotal;
+    total = total - (total * percent) / 100;
+    document.getElementById("originalTotal").innerHTML =
+      "Total $" + originalTotal;
+    document.getElementById("total").innerHTML =
+      "Unallocated $" + total.toFixed(2);
   }
 
-  function getLeftoverTotal() {
-    return leftoverTotal;
+  // LATER: create a function that updates the total when you delete an allocation and updates the allocations percentages and amounts
+
+  // Allocation object
+  function Allocation(name, percentage) {
+    this.name = name;
+    this.percentage = percentage;
+  }
+
+  var allocations = [];
+  // creates a new allocation object and adds it to the allocations array
+  function createAllocation() {
+    var name = document.getElementById("nameInput").value;
+    var percent = document.getElementById("percentInput").value;
+    var newAllocation = new Allocation(name, percent);
+    allocations.push(newAllocation);
+    displayAllocations();
+    update(percent);
+  }
+
+  // Displays all of the allocations
+  function displayAllocations() {
+    document.getElementById("allocationContainer").innerHTML = "";
+    for (var i = 0; i < allocations.length; i++) {
+      document.getElementById("allocationContainer").innerHTML +=
+        "<div id='allocation'><div id='allocationTitle'>" +
+        allocations[i].name +
+        "</div><div id='allocationPercent'> " +
+        allocations[i].percentage +
+        "%</div><div id='allocationAmount'>$" +
+        ((total * allocations[i].percentage) / 100 / 12).toFixed(0) +
+        "/month</div></div>";
+    }
+    displayAllocationNames();
+  }
+
+  // Displays all of the names of allocations in a selector list, for deleting
+  function displayAllocationNames() {
+    document.getElementById("selectorContainer").innerHTML = "";
+    document.getElementById("selectorContainer").innerHTML +=
+      "<select id='allocationSelector'></select>";
+    for (var i = 0; i < allocations.length; i++) {
+      document.getElementById("allocationSelector").innerHTML +=
+        "<option value='" +
+        allocations[i].name +
+        "'>" +
+        allocations[i].name +
+        "</option>";
+    }
+  }
+
+  // needs to add back to total
+  function deleteAllocation() {
+    var allocationName = document.getElementById("allocationSelector").value;
+    for (var i = 0; i < allocations.length; i++) {
+      if (allocations[i].name === allocationName) {
+        allocations.splice(i, 1);
+      }
+    }
+    displayAllocations();
+  }
+
+  // updates number next to percentage input to show monthly or yearly amount
+  function showNum() {
+    var percent = document.getElementById("percentInput").value;
+    document.getElementById("showNum").innerHTML =
+      "$" + ((total * percent) / 100 / 12).toFixed(0) + "/month";
+  }
+  // if clicked, changes the number next to percentage input to show monthly or yearly amount
+  function changeNum() {
+    var percent = document.getElementById("percentInput").value;
+    if (document.getElementById("showNum").innerHTML.includes("month")) {
+      document.getElementById("showNum").innerHTML =
+        "$" + ((total * percent) / 100).toFixed(0) + "/year";
+    } else {
+      document.getElementById("showNum").innerHTML =
+        "$" + ((total * percent) / 100 / 12).toFixed(0) + "/month";
+    }
   }
 
   return (
     <div className="App">
       <div id="container">
         {/* Asks you to input your yearly salary */}
-        <div id="ysQuestion">
+        <div id="salary">
           <div id="title">To get started answer a few questions</div>
           <div id="question">What is your yearly salary?</div>
           <div id="answer">
             <span className="yearlySalaryInput">
-              $<input id="yearlySalary" type="text" name="yearly" />
+              $<input id="salaryInput" type="text" name="yearly" />
             </span>
-            <button onClick={calculateSalaries}>Submit</button>
+            <button onClick={submitSalary}>Submit</button>
           </div>
         </div>
-
-        {/* Shows and asks you to verify if the salaries calculated are correct */}
-        <div id="salaryConfirm">
-          <div id="question">Does everything look correct?</div>
-          <div id="answer">
-            <div id="yearlyValue">Yearly Salary: {yearlySalary}</div>
-            <div id="monthlyValue">Monthly Salary: {monthlySalary}</div>
-            <div id="biweeklyValue">Biweekly Salary: {biweeklySalary}</div>
-            <div id="weeklyValue">Weekly Salary: {weeklySalary}</div>
-          </div>
-          <div id="answer">
-            <button onClick={submitSalaries}>Submit</button>
-            <button onClick={changeSalaries}>Change</button>
-          </div>
-        </div>
-
-        {/* Asks user to input amount of bills */}
-        <div id="billsQuestion">
-          <div id="question">
-            How much in total do you pay monthly in bills?
-          </div>
-          <div id="answer">
-            <span className="billsInput">
-              $<input id="bills" type="text" name="bills" />
-            </span>
-            <button onClick={calculateBills}>Submit</button>
-          </div>
-        </div>
-
-        {/* Asks user to confirm amount they pay in bills */}
-        <div id="billsConfirm">
-          <div id="question">Does this look correct?</div>
-          <div id="answer">
-            <div id="billsTotal">Total Bills: {bills}</div>
-            <div id="billsPercentage">
-              Percentage of income: {billsPercentage}
-            </div>
-          </div>
-          <div id="answer">
-            <button onClick={submitBills}>Submit</button>
-            <button onClick={changeBills}>Change</button>
-          </div>
-        </div>
+        {/* END SALARY */}
 
         {/* Asks user for tax percentage */}
-        <div id="taxQuestion">
-          <div id="question">What is your tax percentage?</div>
+        <div id="tax">
+          <div id="question">What is your tax rate?</div>
           <div id="answer">
             <a
               href="https://www.nerdwallet.com/article/taxes/federal-income-tax-brackets"
               target="_blank"
+              rel="noreferrer"
             >
-              Tax rate information can be found here
+              To find your tax rate click here
             </a>
-
             <span className="taxInput">
-              <input id="tax" type="text" name="tax" /> %
+              <input id="taxInput" type="text" name="tax" /> %
             </span>
-            <button onClick={calculateTax}>Submit</button>
+            <button onClick={submitTax}>Submit</button>
           </div>
         </div>
-
-        {/* Asks user to confirm tax rate */}
-        <div id="taxConfirm">
-          <div id="question">Does this look correct?</div>
-          <div id="answer">
-            <div id="taxRate">Tax Rate: {taxRate}%</div>
-          </div>
-          <div id="answer">
-            <button onClick={submitTaxRate}>Submit</button>
-            <button onClick={changeTaxRate}>Change</button>
-          </div>
-        </div>
+        {/* END TAX */}
 
         {/* Displays to leftover money to allocate */}
         <div id="allDone">
           <h1>All done!</h1>
           <div id="answer">
             <div id="leftoverTotal">
-              Total leftover to allocate into savings: {leftoverTotal}
+              Total leftover to allocate into savings: {total}
             </div>
             <button onClick={nextBtn}>Next</button>
           </div>
@@ -205,42 +168,35 @@ function App() {
 
         {/*  Main app container*/}
         <div id="mainApp">
-          <div id="totalsInfo">
-            <div id="unallocated">${leftoverTotal}</div>
+          <div id="screen">
+            <div id="originalTotal">Total ${originalTotal}</div>
+            <div id="total">Total ${total}</div>
           </div>
+          {/* <div id="allocationParent"> */}
           <div id="allocationContainer"></div>
-          <div id="createAllocation">
-            <input id="allocateName" type="text" name="allocateName" />
+          {/* </div> */}
+          <div id="createContainer">
+            <input id="nameInput" type="text" name="name" placeholder="Name" />
             <input
-              id="allocatePercentage"
+              id="percentInput"
               type="text"
-              name="allocatePercentage"
-            />
-            %{/* button creates new Allocation */}
-            <button
-              id="createBtn"
-              onClick={() => {
-                let name = document.getElementById("allocateName").value;
-                let percentage =
-                  document.getElementById("allocatePercentage").value;
-                let amount = (leftoverTotal * percentage) / 100;
-
-                document.getElementById("allocationContainer").innerHTML +=
-                  "<div class='allocation'><div class='allocationName'>" +
-                  name +
-                  "</div><div class='allocationPercentage'>" +
-                  percentage +
-                  "%</div><div class='allocationAmount'>$" +
-                  amount +
-                  "</div></div>";
-
-                update(percentage);
-                document.getElementById("allocateName").value = "";
-                document.getElementById("allocatePercentage").value = "";
-              }}
-            >
-              Create Allocation
+              name="percent"
+              placeholder="%"
+              onChange={showNum}
+            />{" "}
+            %
+            <span id="showNum" onClick={changeNum}>
+              $0/month
+            </span>
+            {/* turn createBtn into component */}
+            <button id="createBtn" onClick={createAllocation}>
+              Create
             </button>
+          </div>
+
+          <div id="deleteContainer">
+            <div id="selectorContainer"></div>
+            <Delete onClick={deleteAllocation} />
           </div>
         </div>
       </div>

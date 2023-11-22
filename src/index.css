@@ -1,8 +1,9 @@
 body {
   margin: 0;
-  background: linear-gradient(-45deg, #5b0ae7, #5b0ae7, #f85422, #f97046);
+  background: linear-gradient(-45deg, #f83f0c, #f97046, #5b0ae7, #5b0ae7);
+  background: linear-gradient(-45deg, #f83f0c, #f9a846, #5b0ae7, #b70ae7);
   background-size: 400% 400%;
-  animation: gradient 20s ease infinite;
+  animation: gradient 18s ease infinite;
   height: 100vh;
   display: flex;
   align-items: center;
